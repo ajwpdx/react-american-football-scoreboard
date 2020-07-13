@@ -56,3 +56,9 @@ button:focus {
 button:active {
   transform: scale(0.99);
 }
+
+.possession {
+  text-align: center;
+  margin: 2% auto;
+  
+}

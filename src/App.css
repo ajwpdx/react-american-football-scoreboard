@@ -112,10 +112,15 @@
   justify-content: space-around;
 }
 
-.homeButtons__touchdown,
+.action-buttons,
 .homeButtons__fieldGoal,
 .awayButtons__touchdown,
 .awayButtons__fieldGoal {
   margin: 1rem;
   border-radius: 4px;
+}
+
+.action-message{
+  text-align: center;
+  padding: 3%;
 }
