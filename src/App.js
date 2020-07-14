@@ -7,39 +7,159 @@ const actions = ['Run', 'Short Throw', 'Long Throw', 'Kick Field Goal']
 const [run, sThrow, lThrow, fieldGoal] = actions
 
 function App() {
-  const [coinFlip, setCoinFlip] = useState(false)
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
   const [homePossession, setPossession] = useState(true)
   const [downCount, setDown] = useState(1)
-  const [yardsGained, setYardsGained] = useState(1)
+  const [yardsGained, setYardsGained] = useState("[#]")
+  const [actionName, setActionName] = useState('[action]')
+  const [ballOn, setBallOn] = useState(75)
+  const [toGo, setToGo] = useState(10)
+  const [status, setStatus] = useState('')
   //TODO: STEP 2 - Establish your applictaion's state with some useState hooks.  You'll need one for the home score and another for the away score.
   
   const takeAction = e => {
-    setYardsGained(yardsGained*5)
-    setDown(downCount + 1)
-  }
-
-
-  // const downTick = e => {
-  //   if setDown
-  // }
-
-  const homeTouchodwn = e => {
-    setHomeScore(homeScore + 7)
     
+
+    }
+
+  const runAttempt = e => {
+    let gain = Math.floor(Math.random() * (9 + 4) - 3 ) //run formula
+    setActionName('run attempt') //states action
+    setStatus("") //resets status
+    
+    setYardsGained(gain)
+    
+    
+    if(ballOn - gain <= 0 ){ //check for touchdown
+      setStatus('Touchdown!')
+      setDown(1)
+      setBallOn(75)
+      if(homePossession === true){
+        setHomeScore(homeScore + 7)
+        setPossession(false)
+      } else {
+        setAwayScore(awayScore + 7)
+        setPossession(true)
+      }  
+
+    } else if (gain >= toGo) { //check for first down
+      setStatus('First Down!')
+      setToGo(10)
+      setDown(1)
+      setBallOn(ballOn - gain)
+
+     } else if (gain < toGo && downCount === 4){ //check for turnover
+      setToGo(10)
+      setBallOn(100-ballOn + gain)
+      setStatus('Turnover!')
+      setDown(1)
+      if (homePossession === true){
+        setPossession(false)
+        setToGo(10)
+      } else {
+        setPossession(true)
+        setToGo(10)
+      }
+     } else {
+      setToGo(toGo - gain)
+      setDown(downCount + 1)
+      setBallOn(ballOn - gain)
+     }
   }
 
-  const awayTouchdown = e => {
-    setAwayScore(awayScore + 7)
+  const sThrowAttempt = e => {
+    let gain = Math.round(Math.random()*1.2)*Math.floor(Math.random() * (12 - 2 + 1) + 2 ) //run formula
+    setActionName('short throw attempt') //states action
+    setStatus("") //resets status
+    
+    setYardsGained(gain)
+    
+    
+    if(ballOn - gain <= 0 ){ //check for touchdown
+      setStatus('Touchdown!')
+      setDown(1)
+      setBallOn(75)
+      if(homePossession === true){
+        setHomeScore(homeScore + 7)
+        setPossession(false)
+      } else {
+        setAwayScore(awayScore + 7)
+        setPossession(true)
+      }  
+
+    } else if (gain >= toGo) { //check for first down
+      setStatus('First Down!')
+      setToGo(10)
+      setDown(1)
+      setBallOn(ballOn - gain)
+
+     } else if (gain < toGo && downCount === 4){ //check for turnover
+      setToGo(10)
+      setBallOn(100-ballOn + gain)
+      setStatus('Turnover!')
+      setDown(1)
+      if (homePossession === true){
+        setPossession(false)
+        setToGo(10)
+      } else {
+        setPossession(true)
+        setToGo(10)
+      }
+     } else {
+      setToGo(toGo - gain)
+      setDown(downCount + 1)
+      setBallOn(ballOn - gain)
+     }
   }
 
-  const homeFieldGoal = e => {
-    setHomeScore(homeScore + 3)
+  const lThrowAttempt = e => {
+    let gain = Math.round(Math.random()*.75)*Math.floor(Math.random() * (40 - 10 + 1) + 10 ) //run formula
+    setActionName('long throw attempt') //states action
+    setStatus("") //resets status
+    
+    setYardsGained(gain)
+    
+    
+    if(ballOn - gain <= 0 ){ //check for touchdown
+      setStatus('Touchdown!')
+      setDown(1)
+      setBallOn(75)
+      if(homePossession === true){
+        setHomeScore(homeScore + 7)
+        setPossession(false)
+      } else {
+        setAwayScore(awayScore + 7)
+        setPossession(true)
+      }  
+
+    } else if (gain >= toGo) { //check for first down
+      setStatus('First Down!')
+      setToGo(10)
+      setDown(1)
+      setBallOn(ballOn - gain)
+
+     } else if (gain < toGo && downCount === 4){ //check for turnover
+      setToGo(10)
+      setBallOn(100-ballOn + gain)
+      setStatus('Turnover!')
+      setDown(1)
+      if (homePossession === true){
+        setPossession(false)
+        setToGo(10)
+      } else {
+        setPossession(true)
+        setToGo(10)
+      }
+     } else {
+      setToGo(toGo - gain)
+      setDown(downCount + 1)
+      setBallOn(ballOn - gain)
+     }
   }
 
-  const awayFieldGoal = e => {
-    setAwayScore(awayScore + 3)
+  const fieldGoalAttempt = e => {
+    setActionName('field goal attempt')
   }
 
   const changePossession = e => {
@@ -76,11 +196,11 @@ function App() {
       </div>
       <div className="toGo">
         <h3 className="toGo__title">To Go</h3>
-        <div className="toGo__value">7</div>
+        <div className="toGo__value">{toGo}</div>
       </div>
       <div className="ballOn">
         <h3 className="ballOn__title">Ball on</h3>
-        <div className="ballOn__value">21</div>
+        <div className="ballOn__value">{ballOn}</div>
       </div>
       <div className="quarter">
         <h3 className="quarter__title">Quarter</h3>
@@ -88,14 +208,14 @@ function App() {
       </div>
     </div>
       </section>
-        <section className="buttons" onClick = {takeAction}>
-          <button className="action-buttons" onClick={homeTouchodwn}>{run}</button>
-          <button className="action-buttons" onClick={homeFieldGoal}>{sThrow}</button>
-          <button className="action-buttons" onClick={awayTouchdown}>{lThrow}</button>
-          <button className="action-buttons" onClick={awayFieldGoal}>{fieldGoal}</button>
+        <section className="buttons">
+          <button className="action-buttons" onClick={runAttempt}>{run}</button>
+          <button className="action-buttons" onClick={sThrowAttempt}>{sThrow}</button>
+          <button className="action-buttons" onClick={lThrowAttempt}>{lThrow}</button>
+          <button className="action-buttons" onClick={fieldGoalAttempt}>{fieldGoal}</button>
       </section>
       <section>
-  <h1 className = "action-message">The action gained {yardsGained} yards. It is down x with x yards to go. Home team ball.</h1>
+  <h1 className = "action-message">{status} The {actionName} gained {yardsGained} yards.  {homePossession ? 'Home' : 'Away'} team ball.</h1>
       </section>
     </div>
   );
